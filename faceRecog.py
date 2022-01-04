@@ -1,6 +1,10 @@
 #from skimage.metrics import structural_similarity as ssim;
 #import matplotlib.pyplot as plt;
-#mport numpy as np
+#import numpy as np
+import FaceConfiguration
+import pygetwindow
+import pyautogui
+from PIL import Image
 import cv2;
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml');
@@ -24,6 +28,7 @@ while True:
 video.release();
 cv2.destroyAllWindows();
 
+#this is going to be the screen shot section
 
 #def mse(imageA, imageB):
     # the 'Mean Squared Error' between the two images is the
