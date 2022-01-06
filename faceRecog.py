@@ -13,13 +13,13 @@ while True:
     baseFaces = []
     for x, y, w, h in face_rects:
         frame = cv2.rectangle(screen, (x, y), (x+w, y+h), (0, 255, 0), 3)   # make rectangle
-        face = screen[y:y + h, x:x + w]  # create face img
+        face = cv2.resize(screen[y:y + h, x:x + w], (100, 100))  # create face img
         baseFaces.append(face)  # save to list
 
     if key == ord('p'):
         for i in range(len(baseFaces)):  # for every face
             print("photo taken")
-            cv2.imwrite('% s/% s.png' % (path, input("Whose face is this?")), cv2.cvtColor(baseFaces[i], cv2.COLOR_BGR2GRAY))  # save to Faces folder
+            cv2.imwrite('% s/% s.png' % (path, input("Whose face is this?")), baseFaces[i])  # save to Faces folder
 
     cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)
     if key == ord('q'):
