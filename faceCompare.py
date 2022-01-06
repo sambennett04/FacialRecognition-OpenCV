@@ -33,7 +33,16 @@ while True:
         face = cv2.resize(screen[y:y + h, x:x + w], (100, 100))  # create face img
         faces.append(face)  # save to list
 
-    if key == ord('p'):
+
+    baseFaces = os.listdir('Faces')
+    for i in range(len(faces)):
+        for k in range(len(baseFaces)):
+            print('here1')
+            print(mse(faces[i], cv2.imread(os.path.join(path, baseFaces[k]))))
+            if mse(faces[i], cv2.imread(os.path.join(path, baseFaces[k]))) <= 6000:
+                print('here')
+                cv2.putText(screen, baseFaces[k], (face_rects[i][0], face_rects[i][1]), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0))
+    """if key == ord('p'):
         list = os.listdir('Faces')
         for i in range(len(faces)):  # for every face]
             print("photo taken")
@@ -44,8 +53,7 @@ while True:
                     print(list[k])
                     print("same homie")
                 else:
-                    print("not similar")
-
+                    print("not similar")"""
 
 
     cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)
