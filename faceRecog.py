@@ -1,32 +1,36 @@
 #from skimage.metrics import structural_similarity as ssim;
 #import matplotlib.pyplot as plt;
 #import numpy as np
-import FaceConfiguration
-import pygetwindow
-import pyautogui
-from PIL import Image
-import cv2;
+#import FaceConfiguration
+import cv2
+path = 'Faces'
 
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml');
-
-video = cv2.VideoCapture(0);
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+video = cv2.VideoCapture(0)     # 0 for built-in, 1 for external
 
 while True:
-    check, frame = video.read();
-    faces = face_cascade.detectMultiScale(frame,
-                                          scaleFactor=1.1, minNeighbors=5);
-    for x,y,w,h in faces:
-        frame = cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0), 3);
+    key = cv2.waitKey(1)    # getting the key press
+    check, screen = video.read()    # creating the screen (reading it from the webcam)
+    face_rects = face_cascade.detectMultiScale(screen, scaleFactor=1.1, minNeighbors=5)
+    # list of rects that correspond to the face
 
-    cv2.imshow('Face Detector', frame);
+    faces = []
+    for x, y, w, h in face_rects:
+        frame = cv2.rectangle(screen, (x, y), (x+w, y+h), (0, 255, 0), 3)   # make rectangle
+        face = screen[y:y + h, x:x + w]  # create face img
+        faces.append(face)  # save to list
 
-    key = cv2.waitKey(1);
+    if key == ord('p'):
+        for i in range(len(faces)):  # for every face
+            print("photo taken")
+            cv2.imwrite('% s/% s.png' % (path, i), faces[i])    # save to Faces folder
 
+    cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)
     if key == ord('q'):
-        break;
+        break
 
-video.release();
-cv2.destroyAllWindows();
+cv2.destroyAllWindows()
+video.release()
 
 #this is going to be the screen shot section
 
