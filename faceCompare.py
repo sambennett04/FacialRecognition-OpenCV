@@ -6,9 +6,11 @@ def mse(imageA, imageB):
     # the 'Mean Squared Error' between the two images is the
     # sum of the squared difference between the two images;
     # NOTE: the two images must have the same dimension
-    cv2.cvtColor(imageA, cv2.COLOR_BGR2GRAY)
-    cv2.cvtColor(imageB, cv2.COLOR_BGR2GRAY)
+    imageA = cv2.cvtColor(imageA, cv2.COLOR_BGR2GRAY)
+    imageB = cv2.cvtColor(imageB, cv2.COLOR_BGR2GRAY)
 
+    #cv2.imshow('imgA', cv2.resize(imageA, (250, 250)))
+    #cv2.imshow('imgB', cv2.resize(imageB, (250, 250)))
     err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
     err /= float(imageA.shape[0] * imageA.shape[1])
 
@@ -36,12 +38,18 @@ while True:
 
     baseFaces = os.listdir('Faces')
     for i in range(len(faces)):
+        lowestMSE = 200000
+        testMSE = 0
+        closest_index = 0
         for k in range(len(baseFaces)):
-            print('here1')
-            print(mse(faces[i], cv2.imread(os.path.join(path, baseFaces[k]))))
-            if mse(faces[i], cv2.imread(os.path.join(path, baseFaces[k]))) <= 6000:
-                print('here')
-                cv2.putText(screen, baseFaces[k], (face_rects[i][0], face_rects[i][1]), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0))
+            testMSE = mse(faces[i], cv2.imread(os.path.join(path, baseFaces[k])))
+            #print(baseFaces[k], testMSE)
+            if testMSE < lowestMSE:
+                lowestMSE = testMSE
+                closest_index = k
+        cv2.putText(screen, baseFaces[closest_index], (face_rects[i][0], face_rects[i][1]), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
+
+
     """if key == ord('p'):
         list = os.listdir('Faces')
         for i in range(len(faces)):  # for every face]
