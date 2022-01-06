@@ -19,6 +19,7 @@ while True:
     if key == ord('p'):
         for i in range(len(baseFaces)):  # for every face
             print("photo taken")
+            cv2.imshow(str(i), baseFaces[i])
             cv2.imwrite('% s/% s.png' % (path, input("Whose face is this?")), baseFaces[i])  # save to Faces folder
 
     cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)

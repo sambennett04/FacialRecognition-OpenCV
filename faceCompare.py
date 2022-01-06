@@ -40,7 +40,7 @@ while True:
             for k in range(len(list)):
                 # cv2.imshow("yoo", cv2.imread(os.path.join(path, list[k]), 0))
                 print(mse(faces[i], cv2.imread(os.path.join(path, list[k]))))
-                if mse(faces[i], cv2.imread(os.path.join(path, list[k]))) <= 3000:
+                if mse(faces[i], cv2.imread(os.path.join(path, list[k]))) <= 5000:
                     print(list[k])
                     print("same homie")
                 else:
