@@ -1,12 +1,23 @@
 import cv2
+import platform
+
 path = 'Faces'
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-video = cv2.VideoCapture(0)     # 0 for built-in, 1 for external
+
+# On more recent MacOS devices the camera is external
+# On windows the camera is considered to be built-in
+# 0 for built-in, 1 for external
+DEVICE_SETTING = 0 if platform.platform().lower().startswith("windows") else 1
+video = cv2.VideoCapture(DEVICE_SETTING) 
 
 while True:
     key = cv2.waitKey(1)    # getting the key press
     check, screen = video.read()    # creating the screen (reading it from the webcam)
+    
+    if screen is None:
+        raise Exception("screen was not initialized")
+
     face_rects = face_cascade.detectMultiScale(screen, scaleFactor=1.1, minNeighbors=5)
     # list of rects that correspond to the face
 
@@ -20,7 +31,8 @@ while True:
         for i in range(len(baseFaces)):  # for every face
             print("photo taken")
             cv2.imshow(str(i), baseFaces[i])
-            cv2.imwrite('% s/% s.png' % (path, input("Whose face is this?")), baseFaces[i])  # save to Faces folder
+            cv2.imwrite('% s/% s.png' % (path, input("Whose face is this? ")), baseFaces[i])  # save to Faces folder
+            print("\nselect the python launcher and press P to take another photo or Q to quit.")
 
     cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)
     if key == ord('q'):
@@ -28,34 +40,4 @@ while True:
 
 cv2.destroyAllWindows()
 video.release()
-
-#def mse(imageA, imageB):
-    # the 'Mean Squared Error' between the two images is the
-    # sum of the squared difference between the two images;
-    # NOTE: the two images must have the same dimension
-    #err = np.sum((imageA.astype("float") - imageB.astype("float")) ** 2)
-    #err /= float(imageA.shape[0] * imageA.shape[1])
-
-    # return the MSE, the lower the error, the more "similar"
-    # the two images are
-    #return err
-
-#def compare_images(imageA, imageB, title):
-	# compute the mean squared error and structural similarity
-	# index for the images
-	#m = mse(imageA, imageB)
-	#s = ssim(imageA, imageB)
-	# setup the figure
-	#fig = plt.figure(title)
-	#plt.suptitle("MSE: %.2f, SSIM: %.2f" % (m, s))
-	# show first image
-	#ax = fig.add_subplot(1, 2, 1)
-	#plt.imshow(imageA, cmap = plt.cm.gray)
-	#plt.axis("off")
-	# show the second image
-	#ax = fig.add_subplot(1, 2, 2)
-	#plt.imshow(imageB, cmap = plt.cm.gray)
-	#plt.axis("off")
-	# show the images
-	#plt.show()
-
+quit()
