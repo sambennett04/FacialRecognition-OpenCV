@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import os
+import platform
 
 def mse(imageA, imageB):
     # the 'Mean Squared Error' between the two images is the
@@ -21,7 +22,11 @@ def mse(imageA, imageB):
 path = 'Faces'
 
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-video = cv2.VideoCapture(0)     # 0 for built-in, 1 for external
+# On more recent MacOS devices the camera is external
+# On windows the camera is considered to be built-in
+# 0 for built-in, 1 for external
+DEVICE_SETTING = 0 if platform.platform().lower().startswith("windows") else 1
+video = cv2.VideoCapture(DEVICE_SETTING)
 
 while True:
     key = cv2.waitKey(1)    # getting the key press
@@ -47,22 +52,12 @@ while True:
             if testMSE < lowestMSE:
                 lowestMSE = testMSE
                 closest_index = k
-        cv2.putText(screen, baseFaces[closest_index], (face_rects[i][0], face_rects[i][1]), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255))
 
+        matchName = baseFaces[closest_index]
+        matchName = matchName.removesuffix(".png")
+        matchName = ''.join([c for c in matchName if not c.isdigit()])
 
-    """if key == ord('p'):
-        list = os.listdir('Faces')
-        for i in range(len(faces)):  # for every face]
-            print("photo taken")
-            for k in range(len(list)):
-                # cv2.imshow("yoo", cv2.imread(os.path.join(path, list[k]), 0))
-                print(mse(faces[i], cv2.imread(os.path.join(path, list[k]))))
-                if mse(faces[i], cv2.imread(os.path.join(path, list[k]))) <= 5000:
-                    print(list[k])
-                    print("same homie")
-                else:
-                    print("not similar")"""
-
+        cv2.putText(screen, matchName, (face_rects[i][0], face_rects[i][1]), cv2.FONT_HERSHEY_COMPLEX_SMALL, 10, (255, 255, 255))
 
     cv2.imshow('Sam\'s and Hudson\'s super cool Face Detector', screen)
     if key == ord('q'):
@@ -70,5 +65,3 @@ while True:
 
 cv2.destroyAllWindows()
 video.release()
-
-
